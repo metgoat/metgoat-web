@@ -1026,8 +1026,8 @@ class Shape {
     };
 
     for (var i = frameIdx; i < numFrames; i++) {
-      if (!this._frames[i]) {
-        continue;
+      if (!this._frames[i] || (this._modified[i] && i > frameIdx)) {
+        break;
       }
 
       const nextFramePoints = this._frames[i].slice();
@@ -1465,12 +1465,13 @@ class DragShapeCommand extends Command {
     this.shape.setModified(frameIdx, true);
     for (var i = frameIdx; i < numFrames; i++) {
       let selPoints = this.shape.getPoints(i);
-      if (!this.shape.getModified(i) || i == frameIdx) {
-        for (var j = 0; j < selPoints.length; j++) {
-          var p = selPoints[j];
-          p.x = this.dragState.startPoints[j].x + (this.mouse.x - this.dragState.startMouse.x);
-          p.y = this.dragState.startPoints[j].y + (this.mouse.y - this.dragState.startMouse.y);
-        }
+      if (this.shape.getModified(i) && i > frameIdx) {
+        break;
+      }
+      for (var j = 0; j < selPoints.length; j++) {
+        var p = selPoints[j];
+        p.x = this.dragState.startPoints[j].x + (this.mouse.x - this.dragState.startMouse.x);
+        p.y = this.dragState.startPoints[j].y + (this.mouse.y - this.dragState.startMouse.y);
       }
     }
     if (this.shape.provisionalPoints.length > 0) {
@@ -1538,17 +1539,17 @@ class DragPointCommand extends Command {
     this.shape.setModified(frameIdx, true);
     for (var i = frameIdx; i < numFrames; i++) {
       let selPoints = this.shape.getPoints(i);
-      if (!this.shape.getModified(i) || i == frameIdx) {
-        if (this.expectResize == 0 || this.expectResize == selPoints.length-1) {
-          selPoints[0].x = this.mouse.x;
-          selPoints[selPoints.length-1].x = this.mouse.x;
-          selPoints[0].y = this.mouse.y;
-          selPoints[selPoints.length-1].y = this.mouse.y;
-        } else {
-          selPoints[this.expectResize].x = this.mouse.x;
-          selPoints[this.expectResize].y = this.mouse.y;
-        }
-        
+      if (this.shape.getModified(i) && i > frameIdx) {
+        break;
+      }
+      if (((this.expectResize == 0) || (this.expectResize == selPoints.length-1)) && this.shape.closed) {
+        selPoints[0].x = this.mouse.x;
+        selPoints[selPoints.length-1].x = this.mouse.x;
+        selPoints[0].y = this.mouse.y;
+        selPoints[selPoints.length-1].y = this.mouse.y;
+      } else {
+        selPoints[this.expectResize].x = this.mouse.x;
+        selPoints[this.expectResize].y = this.mouse.y;
       }
     }
     if (this.shape.provisionalPoints.length > 0) {
@@ -2152,6 +2153,9 @@ function changeFrame(newFrame) {
   frameIdx = newFrame;
   frameSlider.value = frameIdx;
   frameLabel.textContent = `Frame ${frameIdx+1}/${numFrames}`;
+  if (drawClass.selection) {
+    drawClass.selection.deactivateProvisionalPoints();
+  }
   drawRequestedFrame();
 }
 
