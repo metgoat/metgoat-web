@@ -6,7 +6,7 @@
 > More details to come as this repository becomes more suited for organized contribution. The plan is to implement milestones to organize work into next steps.
 
 ## Code structure & key design concepts
-> This section will take you through the JavaScript code in the order of the code top to bottom, which is not necessarily the order the user will interact with the website. The HTML and CSS files are fairly self-explanatory and relevant components are treated a few times in the JavaScript section.
+Go to the [ARCHITECTURE.md](https://github.com/metgoat/metgoat-web/edit/main/ARCHITECTURE.md) file for the overall design of the app
 
 ### [Video of Zeke Caldon & Dr. Aryeh Drager from May 2026 discussing the code of the app and next steps for new features](https://drive.google.com/file/d/1iFfsYyUoeDq1R3v5QEnazqOYNRc8V3zr/view?usp=sharing)
 
