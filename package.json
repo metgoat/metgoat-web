@@ -1,11 +1,15 @@
 {
   "devDependencies": {
-    "clean-jsdoc-theme": "^4.3.3"
+    "clean-jsdoc-theme": "^4.3.3",
+    "vitest": "^5.1.0"
   },
   "scripts": {
     "docs:build": "jsdoc -c jsdoc.json",
     "docs:dev": "concurrently \"npm run docs:watch\" \"npm run docs:serve\"",
     "docs:watch": "nodemon --watch trax_app.js --watch jsdoc.json --ext js,json --exec \"npm run docs:build\"",
-    "docs:serve": "live-server docs/api --port=8000 --no-browser"
-  }
+    "docs:serve": "live-server docs/api --port=8000 --no-browser",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "type": "module"
 }
